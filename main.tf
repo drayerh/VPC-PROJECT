@@ -111,25 +111,3 @@ resource "aws_route" "igw_public_route" {
   gateway_id             = aws_internet_gateway.myIGW.id
   destination_cidr_block = "0.0.0.0/0"
 }
-
-# Elastic IP
-resource "aws_eip" "demo_eip" {
-  vpc = true
-}
-
-# Create NAT gateway
-resource "aws_nat_gateway" "mydemo_Nat_gateway" {
-  allocation_id = aws_eip.demo_eip.id
-  subnet_id     = aws_subnet.pub_sub_1.id
-
-  tags = {
-    Name = "my nat gateway"
-  }
-}
-
-# Associating NATgateway with private route table
-resource "aws_route" "Nat_gateway-demo_priv_rt_association" {
-  route_table_id         = aws_route_table.demo_priv_rt.id
-  nat_gateway_id         = aws_nat_gateway.mydemo_Nat_gateway.id
-  destination_cidr_block = "0.0.0.0/0"
-}
